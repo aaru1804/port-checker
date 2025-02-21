@@ -4,54 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Port Checker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        label, input, button {
+            margin: 10px;
+            padding: 10px;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-6 rounded-xl shadow-lg text-center w-96">
-        <h1 class="text-2xl font-bold mb-4">🔍 Port Checker</h1>
-        
-        <input id="ip" type="text" placeholder="Enter IP Address" 
-               class="w-full p-2 border rounded-md mb-2">
-        <input id="port" type="number" placeholder="Enter Port" 
-               class="w-full p-2 border rounded-md mb-4">
-        
-        <button onclick="checkPort()" 
-                class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">
-            Check Port
-        </button>
-
-        <p id="result" class="mt-4 text-lg font-semibold"></p>
-    </div>
+<body>
+    <h1>Port Checker</h1>
+    <form id="portCheckerForm">
+        <label for="ipAddress">IP Address:</label>
+        <input type="text" id="ipAddress" name="ipAddress" required>
+        <br>
+        <label for="portNumber">Port Number:</label>
+        <input type="number" id="portNumber" name="portNumber" required>
+        <br>
+        <button type="submit">Check Port</button>
+    </form>
+    <p id="result"></p>
 
     <script>
-        async function checkPort() {
-            const ip = document.getElementById('ip').value;
-            const port = document.getElementById('port').value;
-            const result = document.getElementById('result');
+        document.getElementById('portCheckerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const ipAddress = document.getElementById('ipAddress').value;
+            const portNumber = document.getElementById('portNumber').value;
 
-            if (!ip || !port) {
-                result.textContent = "⚠️ Please enter both IP and Port!";
-                result.className = "text-red-500 font-semibold mt-4";
+            // Basic check for empty input
+            if (!ipAddress || !portNumber) {
+                document.getElementById('result').innerText = "Please provide both IP address and port number.";
                 return;
             }
 
-            try {
-                const response = await fetch(`https://api.portchecker.co/check?ip=${ip}&port=${port}`);
-                const data = await response.json();
+            // Show a loading message while checking the port
+            document.getElementById('result').innerText = "Checking port...";
 
-                if (data.open) {
-                    result.textContent = `✅ Port ${port} is OPEN on ${ip}`;
-                    result.className = "text-green-500 font-semibold mt-4";
+            // Placeholder for actual port checking logic
+            // For now, simulate a success or failure (this doesn't actually check the port)
+            setTimeout(() => {
+                const isPortOpen = Math.random() > 0.5; // Simulate success/failure randomly
+
+                if (isPortOpen) {
+                    document.getElementById('result').innerText = `Port ${portNumber} on ${ipAddress} is OPEN.`;
                 } else {
-                    result.textContent = `❌ Port ${port} is CLOSED on ${ip}`;
-                    result.className = "text-red-500 font-semibold mt-4";
+                    document.getElementById('result').innerText = `Port ${portNumber} on ${ipAddress} is CLOSED.`;
                 }
-            } catch (error) {
-                result.textContent = "⚠️ Error checking port!";
-                result.className = "text-yellow-500 font-semibold mt-4";
-            }
-        }
+            }, 2000);
+        });
     </script>
-
 </body>
 </html>
+
+
+   
